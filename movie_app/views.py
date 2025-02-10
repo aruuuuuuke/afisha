@@ -20,11 +20,16 @@ def directors_detail_api_view(request, id):
     data = serializers.DirectorsDetailSerializer(instance = director, many=False).data
     return Response(data = data)
 
-
 @api_view(http_method_names=['GET'])
 def movies_list_api_view(request):
     movies = models.Movie.objects.all()
     data = serializers.MovieListSerializer(instance = movies, many=True).data
+    return Response(data = data)
+
+@api_view(http_method_names=['GET'])
+def movies_reviews_list_api_view(request):
+    movies = models.Movie.objects.all()
+    data = serializers.MovieListReviewsSerializer(instance = movies, many=True).data
     return Response(data = data)
 
 @api_view(http_method_names=['GET'])
