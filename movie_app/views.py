@@ -1,36 +1,41 @@
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from . import models, serializers
 from rest_framework import status
+from . import models, serializers
 
-@api_view(http_method_names=['GET', 'POST'])
-def directors_list_api_view(request):
-    if request.method == 'GET':
+class DirectorsListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
         directors = models.Director.objects.all()
         data = serializers.DirectorsListSerializer(instance=directors, many=True).data
         return Response(data=data)
-    elif request.method == 'POST':
+
+    def post(self, request, *args, **kwargs):
         serializer = serializers.ValidateDirector(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         name = serializer.validated_data['name']
         director = models.Director.objects.create(name=name)
         return Response(data=serializers.DirectorsDetailSerializer(instance=director).data,
                         status=status.HTTP_201_CREATED)
 
 
-@api_view(http_method_names=['GET', 'PUT', 'DELETE'])
-def directors_detail_api_view(request, id):
-    try:
-        director = models.Director.objects.get(id=id)
-    except models.Director.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class DirectorsDetailAPIView(APIView):
+    def get(self, request, id, *args, **kwargs):
+        try:
+            director = models.Director.objects.get(id=id)
+        except models.Director.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
         data = serializers.DirectorsDetailSerializer(instance=director).data
         return Response(data=data)
 
-    elif request.method == 'PUT':
+    def put(self, request, id, *args, **kwargs):
+        try:
+            director = models.Director.objects.get(id=id)
+        except models.Director.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         serializer = serializers.ValidateDirector(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -39,18 +44,23 @@ def directors_detail_api_view(request, id):
         director.save()
         return Response(data=serializers.DirectorsDetailSerializer(instance=director).data)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, id, *args, **kwargs):
+        try:
+            director = models.Director.objects.get(id=id)
+        except models.Director.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         director.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(http_method_names=['GET', 'POST'])
-def movies_list_api_view(request):
-    if request.method == 'GET':
+class MoviesListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
         movies = models.Movie.objects.all()
         data = serializers.MovieListSerializer(instance=movies, many=True).data
         return Response(data=data)
-    elif request.method == 'POST':
+
+    def post(self, request, *args, **kwargs):
         serializer = serializers.ValidateMovie(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -71,19 +81,23 @@ def movies_list_api_view(request):
                         status=status.HTTP_201_CREATED)
 
 
-@api_view(http_method_names=['GET', 'PUT', 'DELETE'])
-def movie_detail_api_view(request, id):
-    try:
-        movie = models.Movie.objects.get(id=id)
-    except models.Movie.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class MovieDetailAPIView(APIView):
+    def get(self, request, id, *args, **kwargs):
+        try:
+            movie = models.Movie.objects.get(id=id)
+        except models.Movie.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
         data = serializers.MovieDetailSerializer(instance=movie).data
         return Response(data=data)
 
-    elif request.method == 'PUT':
-        serializer = serializers.ValidateMovie(data=request.data)  # Changed to ValidateMovie
+    def put(self, request, id, *args, **kwargs):
+        try:
+            movie = models.Movie.objects.get(id=id)
+        except models.Movie.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = serializers.ValidateMovie(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -99,18 +113,23 @@ def movie_detail_api_view(request, id):
         movie.save()
         return Response(data=serializers.MovieDetailSerializer(instance=movie).data)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, id, *args, **kwargs):
+        try:
+            movie = models.Movie.objects.get(id=id)
+        except models.Movie.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(http_method_names=['GET', 'POST'])
-def reviews_list_api_view(request):
-    if request.method == 'GET':
+class ReviewsListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
         reviews = models.Review.objects.all()
         data = serializers.ReviewListSerializer(instance=reviews, many=True).data
         return Response(data=data)
-    elif request.method == 'POST':
+
+    def post(self, request, *args, **kwargs):
         serializer = serializers.ValidateReview(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -127,18 +146,22 @@ def reviews_list_api_view(request):
                         status=status.HTTP_201_CREATED)
 
 
-@api_view(http_method_names=['GET', 'PUT', 'DELETE'])
-def reviews_detail_api_view(request, id):
-    try:
-        review = models.Review.objects.get(id=id)
-    except models.Review.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class ReviewDetailAPIView(APIView):
+    def get(self, request, id, *args, **kwargs):
+        try:
+            review = models.Review.objects.get(id=id)
+        except models.Review.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
         data = serializers.ReviewDetailSerializer(instance=review).data
         return Response(data=data)
 
-    elif request.method == 'PUT':
+    def put(self, request, id, *args, **kwargs):
+        try:
+            review = models.Review.objects.get(id=id)
+        except models.Review.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         serializer = serializers.ValidateReview(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -150,6 +173,11 @@ def reviews_detail_api_view(request, id):
         review.save()
         return Response(data=serializers.ReviewDetailSerializer(instance=review).data)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, id, *args, **kwargs):
+        try:
+            review = models.Review.objects.get(id=id)
+        except models.Review.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

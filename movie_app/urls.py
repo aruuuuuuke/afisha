@@ -1,16 +1,15 @@
-from django.contrib import admin
 from django.urls import path
-from . import views
-
+from .views import (
+    DirectorsListAPIView, DirectorsDetailAPIView,
+    MoviesListAPIView, MovieDetailAPIView,
+    ReviewsListAPIView, ReviewDetailAPIView
+)
 
 urlpatterns = [
-    path('directors/', views.directors_list_api_view),
-    path('directors/<int:id>/', views.directors_detail_api_view),
-
-    path('/movies/', views.movies_list_api_view),
-    path('/movies/<int:id>/', views.movie_detail_api_view),
-
-    path('/reviews/', views.reviews_list_api_view),
-    path('/reviews/<int:id>/', views.reviews_detail_api_view),
-
+    path('directors/', DirectorsListAPIView.as_view(), name='directors_list'),
+    path('directors/<int:id>/', DirectorsDetailAPIView.as_view(), name='directors_detail'),
+    path('movies/', MoviesListAPIView.as_view(), name='movies_list'),
+    path('movies/<int:id>/', MovieDetailAPIView.as_view(), name='movie_detail'),
+    path('reviews/', ReviewsListAPIView.as_view(), name='reviews_list'),
+    path('reviews/<int:id>/', ReviewDetailAPIView.as_view(), name='review_detail'),
 ]
