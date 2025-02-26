@@ -6,7 +6,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/swagger-u i/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     path('admin/', admin.site.urls),
@@ -15,7 +15,6 @@ urlpatterns = [
     path('api/v1/directors/<int:id>/', views.directors_detail_api_view),
 
     path('api/v1/movies/', views.movies_list_api_view),
-    path('api/v1/movies/reviews/', views.movies_reviews_list_api_view),
     path('api/v1/movies/<int:id>/', views.movie_detail_api_view),
 
     path('api/v1/reviews/', views.reviews_list_api_view),
